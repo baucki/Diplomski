@@ -33,8 +33,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.learning.diplomski.ui.components.DeleteConfirmationDialogFragment
 import com.learning.diplomski.R
 import com.learning.diplomski.data.Repository
-import com.learning.diplomski.rmv.EditFeatureActivity
-import com.learning.diplomski.rmv.SearchActivity
 import com.learning.diplomski.ui.adapters.FeatureAttributesAdapter
 import com.learning.diplomski.viewmodels.mainviewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint

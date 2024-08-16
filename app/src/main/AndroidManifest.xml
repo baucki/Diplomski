@@ -31,11 +31,6 @@
             android:label="@string/title_activity_edit"
             android:theme="@style/Theme.Diplomski" />
         <activity
-            android:name=".rmv.SearchActivity"
-            android:exported="false"
-            android:label="@string/title_activity_edit"
-            android:theme="@style/Theme.Diplomski" />
-        <activity
             android:name=".ui.presentation.SearchActivity"
             android:exported="false"
             android:label="@string/title_activity_edit"
