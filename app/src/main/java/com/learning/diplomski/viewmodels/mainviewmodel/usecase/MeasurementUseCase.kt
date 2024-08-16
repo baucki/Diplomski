@@ -57,7 +57,7 @@ class MeasurementUseCase @Inject constructor() {
     private var tempPolygonGraphic: Graphic? = null
     private var polygonGraphic: Graphic? = null
 
-    private val drawnPoints = mutableListOf<Point>()
+    val drawnPoints = mutableListOf<Point>()
 
     fun measurementButtonClickListener(bottomSheetBehavior: BottomSheetBehavior<View>) {
         _isMeasurement.value = !_isMeasurement.value!!
@@ -97,6 +97,7 @@ class MeasurementUseCase @Inject constructor() {
         btnFinishDrawingPolygon.visibility = View.GONE
         btnDrawPolygonPoint.visibility = View.GONE
         centerMarker.visibility = View.VISIBLE
+        drawnPoints.clear()
     }
 
     fun startDrawingCircle(
@@ -120,7 +121,7 @@ class MeasurementUseCase @Inject constructor() {
         btnDrawPolygonPoint.visibility = View.GONE
         centerMarker.visibility = View.GONE
         tvMeasurementArea.visibility = View.VISIBLE
-
+        drawnPoints.clear()
     }
 
     fun startDrawingPolygon(
@@ -144,6 +145,7 @@ class MeasurementUseCase @Inject constructor() {
         btnDrawPolygonPoint.visibility = View.VISIBLE
         centerMarker.visibility = View.VISIBLE
         tvMeasurementArea.visibility = View.VISIBLE
+        drawnPoints.clear()
     }
 
     fun drawLinePoint(
@@ -152,6 +154,11 @@ class MeasurementUseCase @Inject constructor() {
         graphicsOverlay: GraphicsOverlay,
         tvMeasurementLength: TextView,
     ) {
+        if (drawnPoints.isEmpty()) {
+            _totalDistance.value = 0.0
+            _totalArea.value = 0.0
+            graphicsOverlay.graphics.clear()
+        }
         val centerPoint = mapView.screenToLocation(ScreenCoordinate(mapView.width / 2.0, mapView.height / 2.0))
         val projectedCenterPoint = GeometryEngine.projectOrNull(centerPoint!!, SpatialReference.wgs84()) as Point
         val pointGraphic = Graphic(projectedCenterPoint, pointSymbol)
@@ -256,6 +263,11 @@ class MeasurementUseCase @Inject constructor() {
         tvMeasurementLength: TextView,
         tvMeasurementArea: TextView
     ) {
+        if (drawnPoints.isEmpty()) {
+            _totalDistance.value = 0.0
+            _totalArea.value = 0.0
+            graphicsOverlay.graphics.clear()
+        }
         val centerPoint = mapView.screenToLocation(ScreenCoordinate(mapView.width / 2.0, mapView.height / 2.0))
         // Remove the previous circle graphic if it exists
         circleGraphic?.let { graphicsOverlay.graphics.remove(it) }
@@ -287,7 +299,16 @@ class MeasurementUseCase @Inject constructor() {
         _isDrawingCircle.value = false
     }
 
-    fun drawPolygonPoint(mapView: MapView, pointSymbol: PictureMarkerSymbol, graphicsOverlay: GraphicsOverlay) {
+    fun drawPolygonPoint(
+        mapView: MapView,
+        pointSymbol: PictureMarkerSymbol,
+        graphicsOverlay: GraphicsOverlay
+    ) {
+        if (drawnPoints.isEmpty()) {
+            _totalDistance.value = 0.0
+            _totalArea.value = 0.0
+            graphicsOverlay.graphics.clear()
+        }
         val centerPoint = mapView.screenToLocation(ScreenCoordinate(mapView.width / 2.0, mapView.height / 2.0))
         val projectedCenterPoint = GeometryEngine.projectOrNull(centerPoint!!, SpatialReference.wgs84()) as Point
         val pointGraphic = Graphic(projectedCenterPoint, pointSymbol)

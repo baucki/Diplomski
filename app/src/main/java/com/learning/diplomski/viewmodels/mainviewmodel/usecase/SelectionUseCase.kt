@@ -50,7 +50,7 @@ class SelectionUseCase @Inject constructor() {
     private var selectionCircleGraphic: Graphic? = null
     private var tempSelectionPolygonGraphics: Graphic? = null
 
-    private val selectionPoints = mutableListOf<Point>()
+    val selectionPoints = mutableListOf<Point>()
 
     fun selectionButtonClickListener(bottomSheetBehavior: BottomSheetBehavior<View>) {
         _isSelection.value = !_isSelection.value!!
@@ -83,6 +83,7 @@ class SelectionUseCase @Inject constructor() {
         polygonSelectControls.visibility = View.GONE
         centerMarker.visibility = View.GONE
         tvSelectionType.text = "Circle Selection"
+        selectionPoints.clear()
     }
 
     fun startPolygonSelection(
@@ -99,6 +100,7 @@ class SelectionUseCase @Inject constructor() {
         polygonSelectControls.visibility = View.VISIBLE
         centerMarker.visibility = View.VISIBLE
         tvSelectionType.text = "Polygon Selection"
+        selectionPoints.clear()
     }
 
     fun drawSelectionCircle(
@@ -106,6 +108,7 @@ class SelectionUseCase @Inject constructor() {
         mapView: MapView,
         graphicsOverlay: GraphicsOverlay
     ) {
+        if (selectionPoints.isEmpty()) graphicsOverlay.graphics.clear()
         val centerPoint = mapView.screenToLocation(ScreenCoordinate(mapView.width / 2.0, mapView.height / 2.0))
         val scaledRadius = radius * 50.0;
         val maxDeviation = 1.0;
@@ -165,8 +168,9 @@ class SelectionUseCase @Inject constructor() {
         mapView: MapView,
         graphicsOverlay: GraphicsOverlay,
         pointSymbol: PictureMarkerSymbol,
-
         ) {
+
+        if (selectionPoints.isEmpty()) graphicsOverlay.graphics.clear()
         val centerPoint = mapView.screenToLocation(ScreenCoordinate(mapView.width / 2.0, mapView.height / 2.0))
         val projectedCenterPoint = GeometryEngine.projectOrNull(centerPoint!!, SpatialReference.wgs84()) as Point
         val pointGraphic = Graphic(projectedCenterPoint, pointSymbol)

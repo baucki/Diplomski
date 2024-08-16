@@ -51,9 +51,6 @@ class MainActivity: AppCompatActivity(), DeleteConfirmationDialogFragment.Confir
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var bottomSheetView: View
 
-    private lateinit var identifyBottomSheet: View
-    private lateinit var identifyBottomSheetBehavior: BottomSheetBehavior<View>
-
     private lateinit var measurementBottomSheet: View
     private lateinit var measurementBottomSheetBehavior: BottomSheetBehavior<View>
 
@@ -104,14 +101,13 @@ class MainActivity: AppCompatActivity(), DeleteConfirmationDialogFragment.Confir
     private lateinit var editButton: Button
     private lateinit var deleteButton: Button
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         mapView = findViewById(R.id.mapView)
         graphicsOverlay = GraphicsOverlay()
+        viewModel.graphicsOverlay = graphicsOverlay
 
         featureAttributesAdapter = FeatureAttributesAdapter(emptyList())
         ArcGISEnvironment.apiKey = viewModel.getApiKey()

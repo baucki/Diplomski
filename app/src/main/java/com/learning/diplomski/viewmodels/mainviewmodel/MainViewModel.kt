@@ -19,6 +19,7 @@ import com.arcgismaps.mapping.Viewpoint
 import com.arcgismaps.mapping.layers.FeatureLayer
 import com.arcgismaps.mapping.symbology.PictureMarkerSymbol
 import com.arcgismaps.mapping.view.Graphic
+import com.arcgismaps.mapping.view.GraphicsOverlay
 import com.arcgismaps.mapping.view.MapView
 import com.arcgismaps.mapping.view.ScreenCoordinate
 import com.arcgismaps.tasks.geocode.GeocodeParameters
@@ -84,6 +85,7 @@ class MainViewModel @Inject constructor(
     val serviceFeatureTable = ServiceFeatureTable("http://192.168.1.18:6080/arcgis/rest/services/Servis_SP4_FieldTools/FeatureServer/0")
     val featureLayer = FeatureLayer.createWithFeatureTable(serviceFeatureTable)
 
+    lateinit var graphicsOverlay: GraphicsOverlay
 
     init {
         viewModelScope.launch {
@@ -170,7 +172,7 @@ class MainViewModel @Inject constructor(
         onFeatureIdentified: (Map<String, Any?>) -> Unit
     ) {
         featureLayer.clearSelection()
-//        clearGraphics()
+        graphicsOverlay.graphics.clear()
         val identifyLayerResult =
             mapView.identifyLayer(featureLayer, screenCoordinate, 5.0, false, 1)
 
