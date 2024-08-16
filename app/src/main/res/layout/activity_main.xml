@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- MapView for displaying the map -->
+        <com.arcgismaps.mapping.view.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/mainProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/center_marker"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_draw_points"
+            android:visibility="gone"
+            android:contentDescription="Center Marker" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#88FFFFFF"
+            android:layout_alignParentTop="true"
+            android:queryHint="Search" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="80dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/toggle_button_background"
+            android:checked="false"
+            android:gravity="center"
+            android:textOff=""
+            android:textOn="" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/toggleButton"
+            android:layout_alignEnd="@id/mapView">
+            <ImageButton
+                android:id="@+id/searchButton"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/button_background"
+                android:src="@drawable/ic_search"
+                android:scaleType="centerInside"
+                android:padding="20dp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/toggleButton"
+            android:layout_alignEnd="@id/mapView">
+            <ImageButton
+                android:id="@+id/navigationButton"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginBottom="80dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/button_background"
+                android:src="@drawable/ic_navigation_widget"
+                android:scaleType="centerInside" />
+        </FrameLayout>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_above="@id/toggleButton"
+            android:layout_alignEnd="@id/mapView"
+            android:layout_marginBottom="80dp"
+            android:layout_marginEnd="16dp"
+            android:background="#00000000"
+            android:overlapAnchor="false"
+            android:popupBackground="#00000000" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/toggleButton"
+            android:layout_alignEnd="@id/mapView">
+            <ImageButton
+                android:id="@+id/measurementButton"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginBottom="160dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/button_background"
+                android:src="@drawable/ic_measurement"
+                android:scaleType="centerInside" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/toggleButton"
+            android:layout_alignEnd="@id/mapView">
+            <ImageButton
+                android:id="@+id/spatialSelectionButton"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginBottom="240dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/button_background"
+                android:src="@drawable/ic_spatial_selection"
+                android:scaleType="centerInside"
+                android:padding="16dp"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/toggleButton"
+            android:layout_alignEnd="@id/mapView">
+            <ImageButton
+                android:id="@+id/basemapButton"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginBottom="320dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/button_background"
+                android:src="@drawable/ic_basemaps"
+                android:scaleType="centerInside" />
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iv_draw_line"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_line"
+                    android:contentDescription="Line"
+                    android:padding="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <ImageView
+                    android:id="@+id/iv_draw_circle"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_circle"
+                    android:contentDescription="Circle"
+                    android:padding="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <ImageView
+                    android:id="@+id/iv_draw_polygon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_polygon"
+                    android:contentDescription="Polygon"
+                    android:padding="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_measurement_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Measurement Type"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_measurement_length"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Length: "
+                android:textSize="16sp"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_measurement_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Area: "
+                android:textSize="16sp"
+                android:paddingBottom="8dp"/>
+
+
+            <LinearLayout
+                android:id="@+id/line_controls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_draw_line_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Draw Point" />
+
+                <Button
+                    android:id="@+id/btn_finish_drawing_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Finish Drawing"
+                    android:layout_marginStart="16dp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_finish_drawing_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finish Drawing" />
+
+            <SeekBar
+                android:id="@+id/circle_slider_radius"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/polygon_controls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_draw_polygon_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Draw Point" />
+
+                <Button
+                    android:id="@+id/btn_finish_drawing_polygon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Finish Drawing"
+                    android:layout_marginStart="16dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/select_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/bottom_sheet_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iv_circle_selection"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_circle"
+                    android:contentDescription="Circle"
+                    android:padding="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <ImageView
+                    android:id="@+id/iv_polygon_selection"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_polygon"
+                    android:contentDescription="Polygon"
+                    android:padding="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_selection_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Selection Type"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"/>
+
+            <Button
+                android:id="@+id/btn_select_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finish Drawing" />
+
+            <SeekBar
+                android:id="@+id/circle_select_slider_radius"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/polygon_select_controls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_draw_polygon_select_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Draw Point" />
+
+                <Button
+                    android:id="@+id/btn_select_polygon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Finish Drawing"
+                    android:layout_marginStart="16dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

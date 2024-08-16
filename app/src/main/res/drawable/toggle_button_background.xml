@@ -1,0 +1,9 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background shape -->
+    <item android:drawable="@drawable/custom_background" />
+
+    <!-- Image in the middle -->
+    <item
+        android:drawable="@drawable/ic_add"
+        android:gravity="center" />
+</layer-list>

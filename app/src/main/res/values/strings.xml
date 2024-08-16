@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">Diplomski</string>
+    <string name="mahourivieratrails_mmpk">MahouRivieraTrails.mmpk</string>
+    <string name="oauth_client_id">5kEVj61dCKqpU8Pv</string>
+    <string name="oauth_redirect_uri_scheme">authenticate-with-oauth</string>
+    <string name="oauth_redirect_uri_host">auth</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_edit">EditActivity</string>
+    <string name="location_point_image">Location point image</string>
+    <string-array name="domain_type">
+        <item>Listopadno drvo</item>
+        <item>Četinarsko drvo</item>
+    </string-array>
+    <string-array name="domain_species">
+        <item>Palma</item>
+        <item>Ginko</item>
+        <item>Zimzelena mangolia</item>
+    </string-array>
+    <string-array name="domain_contains">
+        <item>Ima</item>
+        <item>Nema</item>
+    </string-array>
+    <string-array name="domain_scale">
+        <item>1- Loše</item>
+        <item>2- Dovoljno</item>
+        <item>3- Dobro</item>
+        <item>4- Vrlo dobro</item>
+        <item>5- Odlično</item>
+    </string-array>
+    <string-array name="domain_age">
+        <item>mladje od 10g</item>
+        <item>10g - 30g</item>
+        <item>starije od 30g</item>
+    </string-array>
+    <string-array name="domain_trunk_rotting_level">
+        <item>Nema</item>
+        <item>Malo prisutna</item>
+        <item>Vrlo prisutna</item>
+        <item>Vrlo prisutna</item>
+    </string-array>
+    <string-array name="domain_branches_rotting_size">
+        <item>do 10cm</item>
+        <item>preko 10cm</item>
+    </string-array>
+    <string-array name="domain_boolean">
+        <item>Da</item>
+        <item>Ne</item>
+    </string-array>
+    <string-array name="domain_root_collar_type">
+        <item>betonski prsten</item>
+        <item>rizla</item>
+        <item>zemlja</item>
+    </string-array>
+</resources>
