@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.arcgismaps.ApiKey
+import com.arcgismaps.data.Feature
 import com.arcgismaps.data.ServiceFeatureTable
 import com.arcgismaps.geometry.Point
 import com.arcgismaps.geometry.SpatialReference
@@ -180,8 +181,8 @@ class MainViewModel @Inject constructor(
             onSuccess { identifyLayerResult ->
                 val geoElements = identifyLayerResult.geoElements
 
-                if (geoElements.isNotEmpty() && geoElements[0] is com.arcgismaps.data.Feature) {
-                    val identifiedFeature = geoElements[0] as com.arcgismaps.data.Feature
+                if (geoElements.isNotEmpty() && geoElements[0] is Feature) {
+                    val identifiedFeature = geoElements[0] as Feature
                     Repository.feature = identifiedFeature
                     val geometry = identifiedFeature.geometry
                     if (geometry is Point) featurePoint = geometry
@@ -227,14 +228,14 @@ class MainViewModel @Inject constructor(
                             }
                         }
                     }
+
                     featureLayer.selectFeature(identifiedFeature)
                     onFeatureIdentified(aliasAttributes)
 
                 } else {
                     if (_isAddingFeature.value == true) {
                         val mapPoint = mapView.screenToLocation(screenCoordinate)
-                        val attributes =
-                            kotlin.collections.mutableMapOf<kotlin.String, kotlin.Any?>(
+                        val attributes = mutableMapOf<String, Any?>(
                                 "tip" to 1.toShort(),
                                 "vrsta" to null,
                                 "fitopatoloske_promene" to null,
@@ -271,7 +272,6 @@ class MainViewModel @Inject constructor(
                                 "grana" to null,
                                 "krosnja" to null
                             )
-
                         val feature = serviceFeatureTable.createFeature(attributes, mapPoint)
                         serviceFeatureTable.addFeature(feature).apply {
                             onSuccess {
