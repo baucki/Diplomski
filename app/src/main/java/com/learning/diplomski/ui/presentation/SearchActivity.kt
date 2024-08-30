@@ -13,7 +13,7 @@ import com.arcgismaps.data.InheritedDomain
 import com.arcgismaps.data.RangeDomain
 import com.learning.diplomski.ui.components.CustomTextInputEditText
 import com.learning.diplomski.R
-import com.learning.diplomski.data.Repository
+import com.learning.diplomski.data.local.Repository
 import com.learning.diplomski.viewmodels.SearchViewModel
 
 class SearchActivity: AppCompatActivity(){

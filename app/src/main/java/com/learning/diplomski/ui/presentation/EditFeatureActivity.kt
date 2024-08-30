@@ -14,12 +14,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.learning.diplomski.ui.components.CustomTextInputEditText
 import com.learning.diplomski.R
-import com.learning.diplomski.data.Repository
+import com.learning.diplomski.data.local.Repository
 import com.learning.diplomski.viewmodels.EditViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class EditFeatureActivity : AppCompatActivity() {
 
     private val viewModel: EditViewModel by viewModels()
@@ -33,6 +35,7 @@ class EditFeatureActivity : AppCompatActivity() {
 
         initView()
         initListeners()
+        initObservers()
 
     }
 
@@ -55,31 +58,43 @@ class EditFeatureActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun updateFeature(feature: Feature) {
-        val serviceFeatureTable = feature.featureTable as? ServiceFeatureTable
-        if (serviceFeatureTable != null) {
-            try {
-                serviceFeatureTable.updateFeature(feature).apply {
-                    onSuccess {
-                        serviceFeatureTable.applyEdits()
-                        val resultIntent = Intent()
-                        resultIntent.putExtra("updateSuccess", true)
-                        setResult(Activity.RESULT_OK, resultIntent)
-                        finish()
-                    }
-                    onFailure {
-                        val rootView = findViewById<View>(android.R.id.content)
-                        Snackbar.make(rootView, "Failed to update feature", Snackbar.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (e: Exception) {
-                val rootView = findViewById<View>(android.R.id.content)
-                Snackbar.make(rootView, "An error occurred", Snackbar.LENGTH_SHORT).show()
+    private fun initObservers() {
+        viewModel.updateResult.observe(this) { success ->
+            if (success) {
+                val resultIntent = Intent()
+                resultIntent.putExtra("updateSuccess", true)
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish()
             }
-        } else {
-            val rootView = findViewById<View>(android.R.id.content)
-            Snackbar.make(rootView, "Invalid feature table", Snackbar.LENGTH_SHORT).show()
         }
+    }
+
+    private suspend fun updateFeature(feature: Feature) {
+//        val serviceFeatureTable = feature.featureTable as? ServiceFeatureTable
+//        if (serviceFeatureTable != null) {
+//            try {
+//                serviceFeatureTable.updateFeature(feature).apply {
+//                    onSuccess {
+//                        serviceFeatureTable.applyEdits()
+//                        val resultIntent = Intent()
+//                        resultIntent.putExtra("updateSuccess", true)
+//                        setResult(Activity.RESULT_OK, resultIntent)
+//                        finish()
+//                    }
+//                    onFailure {
+//                        val rootView = findViewById<View>(android.R.id.content)
+//                        Snackbar.make(rootView, "Failed to update feature", Snackbar.LENGTH_SHORT).show()
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                val rootView = findViewById<View>(android.R.id.content)
+//                Snackbar.make(rootView, "An error occurred", Snackbar.LENGTH_SHORT).show()
+//            }
+//        } else {
+//            val rootView = findViewById<View>(android.R.id.content)
+//            Snackbar.make(rootView, "Invalid feature table", Snackbar.LENGTH_SHORT).show()
+//        }
+        viewModel.updateFeature(feature)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -1,4 +1,4 @@
-package com.learning.diplomski.data
+package com.learning.diplomski.data.local
 
 import com.arcgismaps.data.Feature
 import com.arcgismaps.data.FeatureType

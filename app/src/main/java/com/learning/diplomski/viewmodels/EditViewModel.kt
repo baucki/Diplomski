@@ -7,7 +7,10 @@ import android.text.InputType
 import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.arcgismaps.data.CodedValueDomain
 import com.arcgismaps.data.Feature
 import com.arcgismaps.data.InheritedDomain
@@ -17,7 +20,8 @@ import com.google.android.material.textfield.TextInputLayout
 import com.learning.diplomski.ui.components.CustomDatePickerEditText
 import com.learning.diplomski.ui.components.CustomTextInputEditText
 import com.learning.diplomski.R
-import com.learning.diplomski.data.Repository
+import com.learning.diplomski.data.local.Repository
+import com.learning.diplomski.data.remote.FeatureRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -30,9 +34,15 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class EditViewModel @Inject constructor() : ViewModel() {
+class EditViewModel @Inject constructor(
+    private val featureRepository: FeatureRepository
+) : ViewModel() {
 
     lateinit var customMap: MutableMap<String, CustomTextInputEditText>
+
+    private val _updateResult = MutableLiveData<Boolean>()
+    val updateResult: LiveData<Boolean> get() = _updateResult
+
 
     fun initializeData(
         linearLayout: LinearLayout,
@@ -326,6 +336,14 @@ class EditViewModel @Inject constructor() : ViewModel() {
         }
         scope.launch {
             Repository.feature?.let { feature -> updateFeature(feature) }
+        }
+    }
+
+    fun updateFeature(feature: Feature) {
+        viewModelScope.launch {
+            featureRepository.updateFeature(feature) { success ->
+                _updateResult.postValue(success)
+            }
         }
     }
 

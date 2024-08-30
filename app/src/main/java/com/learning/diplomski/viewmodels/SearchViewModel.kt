@@ -18,7 +18,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.learning.diplomski.ui.components.CustomDatePickerEditText
 import com.learning.diplomski.ui.components.CustomTextInputEditText
 import com.learning.diplomski.R
-import com.learning.diplomski.data.Repository
+import com.learning.diplomski.data.local.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

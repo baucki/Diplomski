@@ -32,7 +32,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.learning.diplomski.ui.components.DeleteConfirmationDialogFragment
 import com.learning.diplomski.R
-import com.learning.diplomski.data.Repository
+import com.learning.diplomski.data.local.Repository
 import com.learning.diplomski.ui.adapters.FeatureAttributesAdapter
 import com.learning.diplomski.viewmodels.mainviewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -232,15 +232,8 @@ class MainActivity: AppCompatActivity(), DeleteConfirmationDialogFragment.Confir
     override fun onConfirmDelete() {
         try {
             lifecycleScope.launch {
-                viewModel.serviceFeatureTable.deleteFeature(Repository.feature!!).apply {
-                    onSuccess {
-                        viewModel.serviceFeatureTable.applyEdits()
-                    }
-                    onFailure {
-                        val rootView = findViewById<View>(android.R.id.content)
-                        Snackbar.make(rootView, "Failed to update feature", Snackbar.LENGTH_SHORT).show()
-                    }
-                }
+                val rootView = findViewById<View>(android.R.id.content)
+                viewModel.deleteFeature(rootView)
             }
         } catch (e: Exception) {
             val rootView = findViewById<View>(android.R.id.content)
@@ -568,20 +561,8 @@ class MainActivity: AppCompatActivity(), DeleteConfirmationDialogFragment.Confir
                 whereClause = queryString
             }
 
-            lifecycleScope.launch {
-                try {
-                    val featureQueryResult = viewModel.serviceFeatureTable.queryFeatures(queryParameters).getOrThrow() as FeatureQueryResult
-
-                    for (feature in featureQueryResult) {
-                        viewModel.featureLayer.selectFeature(feature)
-                    }
-                } catch (e: Exception) {
-                    showSnackbar("error: ${e.message}")
-                    println("error: ${e.message}")
-                }
-            }
+            viewModel.selectFeatures(queryParameters)
             showSnackbar(queryString)
-            println(queryString)
         }
     }
 

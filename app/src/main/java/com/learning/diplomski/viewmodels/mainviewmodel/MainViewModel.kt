@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -11,6 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.arcgismaps.ApiKey
 import com.arcgismaps.data.Feature
+import com.arcgismaps.data.QueryParameters
 import com.arcgismaps.data.ServiceFeatureTable
 import com.arcgismaps.geometry.Point
 import com.arcgismaps.geometry.SpatialReference
@@ -25,10 +27,12 @@ import com.arcgismaps.mapping.view.MapView
 import com.arcgismaps.mapping.view.ScreenCoordinate
 import com.arcgismaps.tasks.geocode.GeocodeParameters
 import com.arcgismaps.tasks.geocode.LocatorTask
+import com.google.android.material.snackbar.Snackbar
 import com.learning.diplomski.ui.presentation.EditFeatureActivity
 import com.learning.diplomski.ui.adapters.ItemData
 import com.learning.diplomski.R
-import com.learning.diplomski.data.Repository
+import com.learning.diplomski.data.local.Repository
+import com.learning.diplomski.data.remote.FeatureRepository
 import com.learning.diplomski.ui.presentation.SearchActivity
 import com.learning.diplomski.viewmodels.mainviewmodel.usecase.BasemapUseCase
 import com.learning.diplomski.viewmodels.mainviewmodel.usecase.MeasurementUseCase
@@ -42,6 +46,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     application: Application,
+    private val featureRepository: FeatureRepository,
+    val serviceFeatureTable: ServiceFeatureTable,
     val quickSearchUseCase: QuickSearchUseCase,
     val navigationUseCase: NavigationUseCase,
     val basemapUseCase: BasemapUseCase,
@@ -83,7 +89,6 @@ class MainViewModel @Inject constructor(
         maxResults = 1
     }
 
-    val serviceFeatureTable = ServiceFeatureTable("http://192.168.1.18:6080/arcgis/rest/services/Servis_SP4_FieldTools/FeatureServer/0")
     val featureLayer = FeatureLayer.createWithFeatureTable(serviceFeatureTable)
 
     lateinit var graphicsOverlay: GraphicsOverlay
@@ -273,20 +278,35 @@ class MainViewModel @Inject constructor(
                                 "krosnja" to null
                             )
                         val feature = serviceFeatureTable.createFeature(attributes, mapPoint)
-                        serviceFeatureTable.addFeature(feature).apply {
-                            onSuccess {
-                                serviceFeatureTable.applyEdits()
-                                onResult("Feature added successfully.")
-                            }
-                            onFailure {
-                                onResult("Failed to add feature: ${it.message}")
-                            }
-                        }
+                        featureRepository.addFeature(feature, onResult)
                     } else {
                         onResult("No feature identified.")
                     }
                 }
             }
+        }
+    }
+
+    fun selectFeatures(queryParameters: QueryParameters) {
+        viewModelScope.launch {
+            featureRepository.selectFeatures(queryParameters, featureLayer, { selectedFeatures ->
+                // Handle the selected features, if needed
+            }, { errorMessage ->
+            })
+        }
+    }
+
+    suspend fun deleteFeature(rootView: View) {
+        Repository.feature?.let { feature ->
+            featureRepository.deleteFeature(feature) { success ->
+                if (success) {
+                    Snackbar.make(rootView, "Feature deleted", Snackbar.LENGTH_SHORT).show()
+                } else {
+                    Snackbar.make(rootView, "Failed to delete feature", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        } ?: run {
+            Snackbar.make(rootView, "No feature to delete", Snackbar.LENGTH_SHORT).show()
         }
     }
 
